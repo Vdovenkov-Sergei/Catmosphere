@@ -1,1 +1,1 @@
-console.log('Backend is running!');
+import 'dotenv/config';
