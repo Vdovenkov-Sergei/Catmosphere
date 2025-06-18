@@ -1,0 +1,33 @@
+{
+  "name": "catmosphere",
+  "version": "1.0.0",
+  "private": true,
+  "author": "Vdovenkov Sergei, Nikita Petrov, Elena Miacheva, Alexey Krasnov",
+  "description": "Fullstack system for managing a cat cafe 🐾 (Frontend, Admin, Backend, Telegram bot)",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "echo 'Use `npm run dev --workspace=<package>` for run certain package'",
+    "dev:frontend": "npm run dev --workspace=@catmosphere/frontend",
+    "dev:admin": "npm run dev --workspace=@catmosphere/admin-panel",
+    "dev:backend": "npm run dev --workspace=@catmosphere/backend",
+    "dev:bot": "npm run dev --workspace=@catmosphere/telegram-bot",
+    "build:frontend": "npm run build --workspace=@catmosphere/frontend",
+    "build:admin": "npm run build --workspace=@catmosphere/admin-panel",
+    "build:backend": "npm run build --workspace=@catmosphere/backend",
+    "build:bot": "npm run build --workspace=@catmosphere/telegram-bot",
+    "format": "prettier --write \"apps/**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
+    "lint": "echo 'Run linting via: npm run lint --workspace=<package>'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vdovenkov-Sergei/Catmosphere.git"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^9.29.0",
+    "eslint-config-prettier": "^10.1.5",
+    "prettier": "^3.5.3"
+  }
+}
