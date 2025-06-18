@@ -1,27 +1,15 @@
 import { PrismaClient } from '@prisma/client';
 import config from './config';
 
-const getDatabaseUrl = () => {
-  const { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME, DB_SSL } = config.database;
-  const ssl = DB_SSL ? '?sslmode=require' : '';
-  return `postgresql://${DB_USER}:${encodeURIComponent(DB_PASSWORD)}@${DB_HOST}:${DB_PORT}/${DB_NAME}${ssl}`;
-};
-
 const prisma = new PrismaClient({
   datasources: {
     db: {
-      url: getDatabaseUrl(),
+      url: config.database.DATABASE_URL,
     },
   },
-  log: config.app.MODE === 'development' 
+  log: config.app.MODE === 'development'
     ? ['query', 'info', 'warn', 'error']
     : ['error'],
-  __internal: {
-    engine: {
-      enableEngineDebugMode: false,
-      enableQueryLogging: config.app.MODE === 'development',
-    },
-  },
 });
 
 prisma.$use(async (params, next) => {

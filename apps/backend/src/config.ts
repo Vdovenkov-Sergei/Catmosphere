@@ -4,12 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const DatabaseSchema = z.object({
-  DB_USER: z.string().min(1),
-  DB_PASSWORD: z.string().min(1),
-  DB_HOST: z.string().min(1),
-  DB_PORT: z.string().regex(/^\d+$/).transform(Number).refine(v => v > 0 && v < 65536),
-  DB_NAME: z.string().min(1),
-  DB_SSL: z.string().transform(v => v === 'true').optional(),
+  DATABASE_URL: z.string().url().refine(url => url.startsWith('postgresql://'))
 });
 
 const AppSchema = z.object({
@@ -17,19 +12,15 @@ const AppSchema = z.object({
   PORT: z.string().regex(/^\d+$/).transform(Number).default('8080'),
 });
 
+const parsedEnv = {
+  DATABASE_URL: process.env.DATABASE_URL,
+  MODE: process.env.MODE,
+  PORT: process.env.PORT,
+};
+
 const config = {
-  database: DatabaseSchema.parse({
-    DB_USER: process.env.DB_USER,
-    DB_PASSWORD: process.env.DB_PASSWORD,
-    DB_HOST: process.env.DB_HOST,
-    DB_PORT: process.env.DB_PORT,
-    DB_NAME: process.env.DB_NAME,
-    DB_SSL: process.env.DB_SSL,
-  }),
-  app: AppSchema.parse({
-    MODE: process.env.MODE,
-    PORT: process.env.PORT,
-  }),
+  database: DatabaseSchema.parse({ DATABASE_URL: parsedEnv.DATABASE_URL }),
+  app: AppSchema.parse({ MODE: parsedEnv.MODE, PORT: parsedEnv.PORT }),
 };
 
 export type Config = typeof config;
