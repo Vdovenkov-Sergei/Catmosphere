@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import prisma from '../../database';
+import { StatusCodes } from 'http-status-codes';
 import { CatNotFound, BadRequest } from '../../exceptions';
 import { CatSchema, CatsArraySchema } from './schema';
 
@@ -8,14 +9,14 @@ const router = Router();
 // GET /cats/:id — get cat by id
 router.get('/:id', async (request: Request, response: Response, next: NextFunction) => {
   const id = Number(request.params.id);
-  if (isNaN(id)) return next(new BadRequest('Invalid cat ID'));
+  if (isNaN(id) || id <= 0) return next(new BadRequest('Invalid cat ID'));
 
   try {
     const cat = await prisma.cat.findUnique({ where: { id } });
     if (!cat) return next(new CatNotFound(id));
     const validatedCat = CatSchema.parse(cat);
 
-    response.json(validatedCat);
+    response.status(StatusCodes.OK).json(validatedCat);
   } catch (error) {
     next(error);
   }
@@ -38,7 +39,7 @@ router.get('/', async (request: Request, response: Response, next: NextFunction)
     });
     const validatedCats = CatsArraySchema.parse(cats);
     
-    response.json(validatedCats);
+    response.status(StatusCodes.OK).json(validatedCats);
   } catch (error) {
     next(error);
   }

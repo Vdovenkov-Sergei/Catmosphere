@@ -22,3 +22,9 @@ export class CatNotFound extends ApiException {
     super(StatusCodes.NOT_FOUND, `Cat with ID ${id} not found.`);
   }
 }
+
+export class BookingNotFound extends ApiException {
+  constructor(id: number) {
+    super(StatusCodes.NOT_FOUND, `Booking with ID ${id} not found.`);
+  }
+}
