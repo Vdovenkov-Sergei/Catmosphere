@@ -32,5 +32,6 @@
     "ts-node-dev": "^2.0.0"
   },
   "dependencies": {
+    "hasown": "^2.0.2"
   }
 }

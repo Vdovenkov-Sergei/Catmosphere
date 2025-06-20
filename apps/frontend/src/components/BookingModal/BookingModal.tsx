@@ -5,23 +5,45 @@ import Button from "../Button/Button";
 
 interface BookingModalProps {
     onBook: (date: Date, time: string) => void;
-    tableId: string;
+    tableId: number;
 }
 
 const BookingModal: React.FC<BookingModalProps> = ({
     onBook,
     tableId
 }) => {
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-    const [selectedTime, setSelectedTime] = useState<string>('');
+    const [selectedDate, setSelectedDate] = useState<string>('');
+    const [availability, setAvailability] = useState<boolean[]>([]);
+    const [availableSlots, setAvailableSlots] = useState<number[]>([]);
 
-    const timeSlots = [
-        '09:00', '11:00', '13:00', '15:00', '17:00'
-    ];
+    const getDateAndTime = (date: string) => {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+
+        return `${date}T${hours}:${minutes}:${seconds}+03:00`;
+    } 
+
+    async function fetchAvailability(tableId: number, selectedDate: string) {
+        try {
+            const res = await fetch(`http://localhost:52/bookings/availability?table_id=${tableId}&date=${selectedDate}`);
+    
+            if (!res.ok) {
+                throw new Error(`Ошибка HTTP: ${res.status}`);
+            }
+    
+            const data = await res.json();
+            setAvailability(data);
+        } catch (error) {
+            console.error("Ошибка получения свободных слотов: ", error);
+        }
+    }
     
     const handleSubmit = () => {
-        if (selectedDate && selectedTime) {
-            onBook(selectedDate, selectedTime);
+        if (selectedDate) {
+            // onBook(selectedDate, selectedTime);
+            console.log(selectedDate);
         }
     }
 
@@ -35,14 +57,19 @@ const BookingModal: React.FC<BookingModalProps> = ({
                         <label>Дата:</label>
                         <input
                             type="date"
-                            min={new Date().toISOString().split('T')[0]}
-                            onChange={(e) => setSelectedDate(new Date(e.target.value))}
+                            min={new Date().toISOString()}
+                            onChange={(e) => {
+                                const fullDate = getDateAndTime(e.target.value);
+                                console.log(fullDate);
+                                setSelectedDate(fullDate);
+                                fetchAvailability(tableId, selectedDate);
+                            }}
                             required
                         />
                     </div>
                     <div className={styles.formField}>
                         <label>Время:</label>
-                        <select
+                        {/* <select
                             value={selectedTime}
                             onChange={(e) => setSelectedTime(e.target.value)}
                             required
@@ -51,7 +78,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
                             {timeSlots.map((time) => (
                                 <option key={time} value={time}></option>
                             ))}
-                        </select>
+                        </select> */}
                     </div>
 
                     <Button visible="visible" variant="primary">Забронировать</Button>
