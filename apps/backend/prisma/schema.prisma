@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Sex {
+  MALE
+  FEMALE
+}
+
+model Table {
+  id        Int       @id @default(autoincrement())
+  max_seats Int
+  bookings  Booking[]
+}
+
+model Booking {
+  id           Int      @id @default(autoincrement())
+  phone_number String
+  name         String
+  date_from    DateTime
+  date_to      DateTime
+
+  table_id Int
+  table    Table @relation(fields: [table_id], references: [id])
+}
+
+model Cat {
+  id          Int    @id @default(autoincrement())
+  name        String
+  sex         Sex
+  photo_url   String
+  age         Int
+  experience  Int
+  description String
+}

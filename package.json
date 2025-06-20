@@ -8,7 +8,7 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "echo 'Use `npm run dev --workspace=<package>` for run certain package'",
+    "dev": "echo 'Use npm run dev --workspace=<package> for run certain package'",
     "dev:frontend": "npm run dev --workspace=@catmosphere/frontend",
     "dev:admin": "npm run dev --workspace=@catmosphere/admin-panel",
     "dev:backend": "npm run dev --workspace=@catmosphere/backend",
@@ -28,6 +28,9 @@
   "devDependencies": {
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
-    "prettier": "^3.5.3"
+    "prettier": "^3.5.3",
+    "ts-node-dev": "^2.0.0"
+  },
+  "dependencies": {
   }
 }
