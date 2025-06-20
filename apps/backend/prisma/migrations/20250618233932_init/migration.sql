@@ -27,8 +27,8 @@ CREATE TABLE "Booking" (
     "id" SERIAL NOT NULL,
     "phone_number" TEXT NOT NULL,
     "name" TEXT NOT NULL,
-    "date_from" TIMESTAMP(3) NOT NULL,
-    "date_to" TIMESTAMP(3) NOT NULL,
+    "date_from" TIMESTAMP(0) WITH TIME ZONE NOT NULL,
+    "date_to" TIMESTAMP(0) WITH TIME ZONE NOT NULL,
     "table_id" INTEGER NOT NULL,
 
     CONSTRAINT "Booking_pkey" PRIMARY KEY ("id")
