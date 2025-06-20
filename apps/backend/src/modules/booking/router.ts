@@ -65,10 +65,15 @@ router.post('/', async (request: Request, response: Response, next: NextFunction
 // GET /bookings/availability?table_id={}&date={}
 router.get('/availability', async (request: Request, response: Response, next: NextFunction) => {
   try {
-    const parsed = AvailabilityQuerySchema.parse({
-      table_id: Number(request.query.table_id),
-      date: request.query.date,
-    });
+    let parsed;
+    try {
+      parsed = AvailabilityQuerySchema.parse({
+        table_id: Number(request.query.table_id),
+        date: request.query.date,
+      });
+    } catch (error) {
+      return next(new BadRequest('Invalid or missing query parameters: `table_id` and `date`'));
+    }
 
     const dayStart = new Date(`${parsed.date}T09:00:00`);
     const dayEnd = new Date(`${parsed.date}T21:00:00`);
@@ -89,12 +94,18 @@ router.get('/availability', async (request: Request, response: Response, next: N
   }
 });
 
-// GET /bookings/phone?phone_number={}
-router.get('/phone', async (request: Request, response: Response, next: NextFunction) => {
+// GET /bookings?phone_number={}
+router.get('/', async (request: Request, response: Response, next: NextFunction) => {
   try {
-    const parsed = BookingsByPhoneQuerySchema.parse({
-      phone_number: request.query.phone_number,
-    });
+    let parsed;
+    try {
+      parsed = BookingsByPhoneQuerySchema.parse({
+        phone_number: request.query.phone_number,
+      });
+    }
+    catch (error) {
+      return next(new BadRequest('Invalid or missing `phone number` query parameter'));
+    }
 
     const bookings = await prisma.booking.findMany({
       where: { phone_number: parsed.phone_number },

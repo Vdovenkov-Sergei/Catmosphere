@@ -29,7 +29,7 @@ router.get('/', async (request: Request, response: Response, next: NextFunction)
   const limit = Number(request.query.limit) || 10;
   const offset = Number(request.query.offset) || 0;
   if (isNaN(limit) || isNaN(offset) || limit <= 0 || offset < 0) {
-    return next(new BadRequest('Limit must be positive and offset non-negative'));
+    return next(new BadRequest('Invalid pagination parameters: `limit` and `offset`'));
   }
 
   try {
