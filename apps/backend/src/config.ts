@@ -12,6 +12,7 @@ const DatabaseSchema = z.object({
 const AppSchema = z.object({
   MODE: z.enum(['development', 'production', 'test']).default('development'),
   PORT: z.string().regex(/^\d+$/).transform(Number).default('8080'),
+  FRONTEND_URL: z.string().url(),
 });
 
 // ========== AUTH ==========
@@ -26,6 +27,7 @@ const parsedEnv = {
   DATABASE_URL: process.env.DATABASE_URL,
   MODE: process.env.MODE,
   PORT: process.env.PORT,
+  FRONTEND_URL: process.env.FRONTEND_URL,
   ADMIN_EMAIL: process.env.ADMIN_EMAIL,
   ADMIN_PASSWORD_HASH: process.env.ADMIN_PASSWORD_HASH,
   ADMIN_COOKIE_SECRET: process.env.ADMIN_COOKIE_SECRET,
@@ -34,7 +36,7 @@ const parsedEnv = {
 // ========== Export Config ==========
 const config = {
   database: DatabaseSchema.parse({ DATABASE_URL: parsedEnv.DATABASE_URL }),
-  app: AppSchema.parse({ MODE: parsedEnv.MODE, PORT: parsedEnv.PORT }),
+  app: AppSchema.parse({ MODE: parsedEnv.MODE, PORT: parsedEnv.PORT, FRONTEND_URL: parsedEnv.FRONTEND_URL }),
   auth: AuthSchema.parse({
     ADMIN_EMAIL: parsedEnv.ADMIN_EMAIL,
     ADMIN_PASSWORD_HASH: parsedEnv.ADMIN_PASSWORD_HASH,
