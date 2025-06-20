@@ -8,7 +8,7 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "echo 'Use `npm run dev --workspace=<package>` for run certain package'",
+    "dev": "echo 'Use npm run dev --workspace=<package> for run certain package'",
     "dev:frontend": "npm run dev --workspace=@catmosphere/frontend",
     "dev:admin": "npm run dev --workspace=@catmosphere/admin-panel",
     "dev:backend": "npm run dev --workspace=@catmosphere/backend",
@@ -32,10 +32,5 @@
     "ts-node-dev": "^2.0.0"
   },
   "dependencies": {
-    "@adminjs/express": "^4.0.1",
-    "@adminjs/prisma": "^5.0.4",
-    "adminjs": "^7.8.16",
-    "express-formidable": "^1.2.0",
-    "express-session": "^1.18.1"
   }
 }

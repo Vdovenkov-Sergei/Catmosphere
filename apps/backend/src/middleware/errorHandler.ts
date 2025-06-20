@@ -39,7 +39,7 @@ export const errorHandler: ErrorRequestHandler = (
   if (err instanceof ZodError) {
     const errors = err.errors.map(e => e.message);
     console.error(chalk.red(`[ZOD ERROR] ${errors.join('; ')}`));
-    response.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ error: 'Validation Error', details: err });
+    response.status(StatusCodes.UNPROCESSABLE_ENTITY).json({ error: 'Unprocessable Entity Error', details: err });
     return;
   }
 

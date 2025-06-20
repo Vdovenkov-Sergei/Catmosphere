@@ -8,7 +8,7 @@
     "lint": "eslint . --ext .ts"
   },
   "description": "Backend for `Catmosphere` cat cafe system",
-  "author": "Vdovenkov Sergei",
+  "author": "Vdovenkov Sergei, Krasnov Alexey",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^5.0.3",

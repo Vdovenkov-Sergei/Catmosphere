@@ -1,18 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('ADMIN', 'WAITER');
-
--- CreateEnum
 CREATE TYPE "Sex" AS ENUM ('MALE', 'FEMALE');
-
--- CreateTable
-CREATE TABLE "User" (
-    "id" SERIAL NOT NULL,
-    "login" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
-    "role" "Role" NOT NULL,
-
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
 
 -- CreateTable
 CREATE TABLE "Table" (
@@ -46,9 +33,6 @@ CREATE TABLE "Cat" (
 
     CONSTRAINT "Cat_pkey" PRIMARY KEY ("id")
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_login_key" ON "User"("login");
 
 -- AddForeignKey
 ALTER TABLE "Booking" ADD CONSTRAINT "Booking_table_id_fkey" FOREIGN KEY ("table_id") REFERENCES "Table"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -232,11 +232,11 @@ const createBooking: ZodOpenApiOperationObject = {
       },
     },
     '422': {
-      description: 'Validation error - invalid input data format',
+      description: 'Unprocessable entity error - invalid input data format',
       content: {
         'application/json': {
           schema: z.object({
-            error: z.string().default('Validation Error'),
+            error: z.string().default('Unprocessable Entity Error'),
             details: z.array(z.string()).optional(),
           }).openapi({}),
         },

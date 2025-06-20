@@ -12,12 +12,6 @@ enum Sex {
   FEMALE
 }
 
-model User {
-  id       Int    @id @default(autoincrement())
-  login    String @unique
-  password String
-}
-
 model Table {
   id        Int       @id @default(autoincrement())
   max_seats Int
