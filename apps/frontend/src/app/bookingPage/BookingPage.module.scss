@@ -1,0 +1,86 @@
+@use '../../styles/variables' as *;
+
+.bookingPage body {
+    padding: 0;
+    margin: 0;
+    background-color: $background-color;
+    font-family: $font-family;
+}
+
+.bookingPage {
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    flex: 1;
+    min-height: 100vh;
+    margin: 0 auto;
+    width: 90%;
+
+    &__content {
+        margin-top: 40px;
+        margin-bottom: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+        
+        .tables {
+            flex-direction: column;
+            justify-content: center;
+            background-color: #DFDFDF;
+            border-radius: 30px;
+            padding: 5%;
+        }
+        .firstRow {
+            display: flex;
+            justify-content: center;
+            gap: 8%;
+
+            .id1, .id3 {
+                //width: 300px;
+                width: 30%;
+                cursor: pointer;
+            }
+
+            .id2 {
+                //width: 240px;
+                width: 22%;
+                cursor: pointer;
+            }
+        }
+
+        .secondRow {
+            display: flex;
+            gap: 8%;
+            justify-content: center;
+
+            .id4, .id5 {
+                //width: 240px;
+                width: 22%;
+                cursor: pointer;
+            }
+        }
+
+        .thirdRow {
+            display: flex;
+            justify-content: center;
+            gap: 40%;
+            position: relative;
+
+            .id6, .id7 {
+                //width: 240px;
+                width: 22%;
+                cursor: pointer;
+            }
+
+            .enter {
+                position: absolute;
+                top: 21.5%;
+                width: 22%;
+            }
+        }
+    }
+}
