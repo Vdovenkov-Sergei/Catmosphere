@@ -1,13 +1,25 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "outDir": "dist",
-    "rootDir": "src",
-    "strict": true,
+    "baseUrl": ".",
+    "outDir": "./build",
+    "target": "esnext",
+    "lib": ["esnext"],
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "jsx": "react",
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "noImplicitThis": true,
+    "moduleResolution": "nodenext",
+    "module": "nodenext",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false,
+    "strict": true,
+    "sourceMap": true,
     "skipLibCheck": true
   },
-  "include": ["src"]
+  "include": [
+    "./src/**/*"
+  ],
 }

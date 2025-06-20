@@ -7,11 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  ADMIN
-  WAITER
-}
-
 enum Sex {
   MALE
   FEMALE
@@ -21,13 +16,12 @@ model User {
   id       Int    @id @default(autoincrement())
   login    String @unique
   password String
-  role     Role
 }
 
 model Table {
-  id         Int       @id @default(autoincrement())
-  max_seats  Int
-  bookings   Booking[]
+  id        Int       @id @default(autoincrement())
+  max_seats Int
+  bookings  Booking[]
 }
 
 model Booking {
@@ -38,7 +32,7 @@ model Booking {
   date_to      DateTime
 
   table_id Int
-  table    Table   @relation(fields: [table_id], references: [id])
+  table    Table @relation(fields: [table_id], references: [id])
 }
 
 model Cat {
