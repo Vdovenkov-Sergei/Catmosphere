@@ -3,6 +3,7 @@ import prisma from '../../database';
 import { StatusCodes } from 'http-status-codes';
 import { CatNotFound, BadRequest } from '../../exceptions';
 import { CatSchema, CatsArraySchema } from './schema';
+import chalk from 'chalk';
 
 const router = Router();
 
@@ -15,7 +16,8 @@ router.get('/:id', async (request: Request, response: Response, next: NextFuncti
     const cat = await prisma.cat.findUnique({ where: { id } });
     if (!cat) return next(new CatNotFound(id));
     const validatedCat = CatSchema.parse(cat);
-
+    
+    console.log(chalk.green(`[CATS] Fetched cat with ID ${validatedCat.id}`));
     response.status(StatusCodes.OK).json(validatedCat);
   } catch (error) {
     next(error);
@@ -26,8 +28,7 @@ router.get('/:id', async (request: Request, response: Response, next: NextFuncti
 router.get('/', async (request: Request, response: Response, next: NextFunction) => {
   const limit = Number(request.query.limit) || 10;
   const offset = Number(request.query.offset) || 0;
-
-  if (limit <= 0 || offset < 0) {
+  if (isNaN(limit) || isNaN(offset) || limit <= 0 || offset < 0) {
     return next(new BadRequest('Limit must be positive and offset non-negative'));
   }
 
@@ -39,6 +40,7 @@ router.get('/', async (request: Request, response: Response, next: NextFunction)
     });
     const validatedCats = CatsArraySchema.parse(cats);
     
+    console.log(chalk.green(`[CATS] Fetched ${validatedCats.length} cats with limit ${limit} and offset ${offset}`));
     response.status(StatusCodes.OK).json(validatedCats);
   } catch (error) {
     next(error);

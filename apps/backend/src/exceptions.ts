@@ -17,14 +17,26 @@ export class BadRequest extends ApiException {
   }
 }
 
+export class TableNotFound extends ApiException {
+  constructor(id: number) {
+    super(StatusCodes.NOT_FOUND, `Table with ID ${id} not found`);
+  }
+}
+
 export class CatNotFound extends ApiException {
   constructor(id: number) {
-    super(StatusCodes.NOT_FOUND, `Cat with ID ${id} not found.`);
+    super(StatusCodes.NOT_FOUND, `Cat with ID ${id} not found`);
   }
 }
 
 export class BookingNotFound extends ApiException {
   constructor(id: number) {
-    super(StatusCodes.NOT_FOUND, `Booking with ID ${id} not found.`);
+    super(StatusCodes.NOT_FOUND, `Booking with ID ${id} not found`);
+  }
+}
+
+export class BookingConflict extends ApiException {
+  constructor(message: string = 'Booking conflict') {
+    super(StatusCodes.CONFLICT, message);
   }
 }

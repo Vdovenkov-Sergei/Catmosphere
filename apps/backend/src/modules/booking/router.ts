@@ -8,7 +8,8 @@ import {
   BookingsArraySchema,
 } from './schema';
 import { StatusCodes } from 'http-status-codes';
-import { BadRequest, BookingNotFound } from '../../exceptions';
+import { BadRequest, BookingNotFound, BookingConflict, TableNotFound } from '../../exceptions';
+import chalk from 'chalk';
 
 const router = Router();
 
@@ -32,8 +33,29 @@ function getOccupiedHours(bookings: { date_from: Date; date_to: Date }[]): boole
 router.post('/', async (request: Request, response: Response, next: NextFunction) => {
   try {
     const data = CreateBookingSchema.parse(request.body);
+    if (data.date_from >= data.date_to) {
+      return next(new BadRequest('date_from must be before date_to'));
+    }
+    const now = new Date();
+    if (new Date(data.date_from) < now) {
+      return next(new BadRequest('date_from cannot be in the past'));
+    }
+    const table = await prisma.table.findUnique({ where: { id: data.table_id } });
+    if (!table) return next(new TableNotFound(data.table_id));
+
+    const conflictingBookings = await prisma.booking.findMany({
+      where: {
+        table_id: data.table_id,
+        date_from: { lt: data.date_to },
+        date_to: { gt: data.date_from },
+      },
+    });
+    if (conflictingBookings.length > 0) {
+      return next(new BookingConflict('This time slot is already booked'));
+    }
     const created = await prisma.booking.create({ data });
     const validated = BookingSchema.parse(created);
+    console.log(chalk.green(`[BOOKINGS] Created booking with ID ${validated.id} for table ${validated.table_id}`));
     response.status(StatusCodes.CREATED).json(validated);
   } catch (error) {
     next(error);
@@ -60,14 +82,15 @@ router.get('/availability', async (request: Request, response: Response, next: N
     });
 
     const availability = getOccupiedHours(bookings);
+    console.log(chalk.green(`[BOOKINGS] Fetched availability for table ${parsed.table_id} on ${parsed.date}`));
     response.status(StatusCodes.OK).json(availability);
   } catch (error) {
     next(error);
   }
 });
 
-// GET /bookings?phone_number={}
-router.get('/', async (request: Request, response: Response, next: NextFunction) => {
+// GET /bookings/phone?phone_number={}
+router.get('/phone', async (request: Request, response: Response, next: NextFunction) => {
   try {
     const parsed = BookingsByPhoneQuerySchema.parse({
       phone_number: request.query.phone_number,
@@ -79,6 +102,7 @@ router.get('/', async (request: Request, response: Response, next: NextFunction)
     });
 
     const validated = BookingsArraySchema.parse(bookings);
+    console.log(chalk.green(`[BOOKINGS] Fetched ${validated.length} bookings for phone ${parsed.phone_number}`));
     response.status(StatusCodes.OK).json(validated);
   } catch (error) {
     next(error);
@@ -95,6 +119,7 @@ router.delete('/:id', async (request: Request, response: Response, next: NextFun
     if (!existing) return next(new BookingNotFound(id));
 
     await prisma.booking.delete({ where: { id } });
+    console.log(chalk.green(`[BOOKINGS] Booking with ID ${id} cancelled`));
     response.status(StatusCodes.NO_CONTENT).send();
   } catch (error) {
     next(error);

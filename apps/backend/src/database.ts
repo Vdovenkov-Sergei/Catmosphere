@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import type { Prisma } from '@prisma/client';
 import config from './config';
+import chalk from 'chalk';
 
 const prisma = new PrismaClient({
   datasources: {
@@ -16,15 +17,10 @@ const prisma = new PrismaClient({
 if (config.app.MODE === 'development') {
   prisma.$use(async (params: Prisma.MiddlewareParams, next: (params: Prisma.MiddlewareParams) => Promise<any>): Promise<any> => {
     const start = Date.now();
-    try {
-      const result = await next(params);
-      const duration = Date.now() - start;
-      console.log(`[PRISMA] ${params.model}.${params.action} - ${duration}ms`);
-      return result;
-    } catch (error) {
-      console.error(`[PRISMA ERROR] ${params.model}.${params.action}`, error);
-      throw error;
-    }
+    const result = await next(params);
+    const duration = Date.now() - start;
+    console.log(chalk.green(`[PRISMA] ${params.model}.${params.action} - ${duration}ms`));
+    return result;
   });
 }
 
@@ -36,8 +32,7 @@ const shutdown = async () => {
 process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 process.on('unhandledRejection', (err) => {
-  console.error('Unhandled rejection:', err);
-  shutdown();
+  console.error(chalk.red('Unhandled rejection:', err));
 });
 
 export default prisma;
