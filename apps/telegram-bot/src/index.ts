@@ -1,12 +1,9 @@
-import { config } from 'dotenv';
-import path from 'path';
 import { Telegraf, session } from 'telegraf';
 import { MyContext } from './types';
 import { setupHandlers } from './handlers';
+import { config } from './config';
 
-config({ path: path.resolve(__dirname, '..', '.env') });
-
-const bot = new Telegraf<MyContext>(process.env.BOT_TOKEN!);
+const bot = new Telegraf<MyContext>(config.TELEGRAM_BOT_TOKEN);
 bot.use(session());
 
 setupHandlers(bot);

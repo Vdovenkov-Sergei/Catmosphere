@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "description": "Frontend for `Catmosphere` cat cafe system",
+  "author": "Miacheva Elena",
+  "license": "ISC",
   "dependencies": {
     "next": "15.3.4",
     "react": "^19.0.0",

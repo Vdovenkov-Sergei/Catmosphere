@@ -1,8 +1,7 @@
 import { Markup, Telegraf } from 'telegraf';
 import axios from 'axios';
-import { Cat, Booking, Table, MySession, MyContext } from './types';
-
-const API_BASE = 'http://localhost:52';
+import { Cat, Booking, Table, MyContext } from './types';
+import { config } from './config';
 
 // Cats functions
 
@@ -18,7 +17,7 @@ function sexToRussian(sex: 'MALE' | 'FEMALE'): string {
 }
 
 async function fetchCats(offset: number, limit: number): Promise<Cat[]> {
-  const res = await axios.get(`${API_BASE}/cats`, { params: { offset, limit } });
+  const res = await axios.get(`${config.API_URL}/cats`, { params: { offset, limit } });
   return res.data;
 }
 
@@ -60,12 +59,24 @@ async function showCatFromCache(ctx: MyContext) {
 const hours = [
     '9:00', '10:00', '11:00', '12:00', 
     '13:00', '14:00', '15:00', '16:00', 
-    '17:00', '18:00', '19:00', '20:00', '21:00'
+    '17:00', '18:00', '19:00', '20:00',
 ];
 
 function formatBookingDate(date: string): string {
-  return `${date}T10:00:00+03:00`;
+  return `${date}T00:00:00+03:00`;
 }
+
+function toMoscowTimeString(dateStr: string) {
+  return new Date(dateStr).toLocaleString('ru-RU', {
+    timeZone: 'Europe/Moscow',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
+
 
 // Handlers 
 
@@ -169,10 +180,10 @@ export function setupHandlers(bot: Telegraf<MyContext>) {
         ctx.session.bookingStep = 'awaiting_table';
 
         try {
-          const res = await axios.get(`${API_BASE}/tables`);
+          const res = await axios.get(`${config.API_URL}/tables`);
           const tables: Table[] = res.data;
           const buttons = tables.map((t) =>
-            Markup.button.callback(`Столик #${t.id} (${t.max_seats} мест)`, `table_${t.id}`)
+            Markup.button.callback(`Столик № ${t.id} (${t.max_seats} мест)`, `table_${t.id}`)
           );
           await ctx.reply('Выберите столик:', Markup.inlineKeyboard(buttons, { columns: 2 }));
         } catch (e) {
@@ -189,13 +200,14 @@ export function setupHandlers(bot: Telegraf<MyContext>) {
       }
       case 'awaiting_phone': {
         const phone = ctx.message.text.trim();
-        if (!phone.match(/^\+\d{10,15}$/)) {
+
+        if (!phone.match(/^\+?[0-9]{10,15}$/)) {
           await ctx.reply('Неверный формат номера, попробуйте снова:');
           return;
         }
         ctx.session.booking!.phone_number = phone;
         try {
-          await axios.post(`${API_BASE}/bookings`, ctx.session.booking);
+          await axios.post(`${config.API_URL}/bookings`, ctx.session.booking);
           await ctx.reply('✅ Бронирование успешно создано!');
         } catch (e) {
           await ctx.reply('❌ Ошибка при создании бронирования');
@@ -206,12 +218,12 @@ export function setupHandlers(bot: Telegraf<MyContext>) {
       }
       case 'awaiting_lookup_phone': {
         const phone = ctx.message.text.trim();
-        if (!phone.match(/^\+\d{10,15}$/)) {
+        if (!phone.match(/^\+?[0-9]{10,15}$/)) {
           await ctx.reply('Неверный формат номера, попробуйте снова:');
           return;
         }
         try {
-          const res = await axios.get(`${API_BASE}/bookings`, {
+          const res = await axios.get(`${config.API_URL}/bookings`, {
             params: { phone_number: phone }
           });
           const bookings: Booking[] = res.data;
@@ -220,9 +232,9 @@ export function setupHandlers(bot: Telegraf<MyContext>) {
           } else {
             for (const b of bookings) {
               await ctx.reply(
-                `Столик: #${b.table_id}\n` +
-                `Дата: ${b.date_from ? b.date_from.replace('T', ' ').slice(0, 16) : 'неизвестно'}\n` +
-                `До: ${b.date_to ? b.date_to.replace('T', ' ').slice(0, 16) : 'неизвестно'}\n` +
+                `Столик: № ${b.table_id}\n` +
+                `Дата: ${b.date_from ? toMoscowTimeString(b.date_from) : 'неизвестно'}\n` +
+                `До: ${b.date_to ? toMoscowTimeString(b.date_to) : 'неизвестно'}\n` +
                 `Имя: ${b.name}`,
                 Markup.inlineKeyboard([
                   Markup.button.callback('❌ Удалить', `delete_booking_${b.id}`)
@@ -260,13 +272,12 @@ export function setupHandlers(bot: Telegraf<MyContext>) {
     const formattedDate = date.includes('T') ? date : formatBookingDate(date);
 
     try {
-      const res = await axios.get(`${API_BASE}/bookings/availability`, {
+      const res = await axios.get(`${config.API_URL}/bookings/availability`, {
         params: {
           table_id: table_id,
           date: formattedDate,
         },
       });
-
       const busyIntervals: boolean[] = res.data;
 
       const available = hours.filter((hour, idx) => !busyIntervals[idx]);
@@ -325,7 +336,7 @@ export function setupHandlers(bot: Telegraf<MyContext>) {
       return;
     }
     try {
-      await axios.delete(`${API_BASE}/bookings/${bookingId}`);
+      await axios.delete(`${config.API_URL}/bookings/${bookingId}`);
       await ctx.editMessageText('Бронь успешно удалена ✅');
     } catch (e) {
       await ctx.reply('Ошибка при удалении брони');
