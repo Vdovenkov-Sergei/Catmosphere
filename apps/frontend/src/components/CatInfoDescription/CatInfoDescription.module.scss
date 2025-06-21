@@ -1,0 +1,54 @@
+@use '../../styles/variables' as *;
+
+.textContainer {
+    padding-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    width: 750px;
+    line-height: 1.5;
+
+    &__header {
+        margin: 0;
+        padding: 0;
+        font-size: $header-font-size;
+        font-weight: $header-font-weight;
+        color: $header-color;
+    }
+
+    &__description {
+        margin: 0;
+        padding: 0;
+        font-size: $font-size;
+        font-weight: $font-weight;
+    }
+}
+
+@media (max-width: 800px) {
+    .textContainer {
+        min-width: 200px;
+        width: 90%;
+
+        &__header {
+            font-size: 28px;
+        }
+
+        &__description {
+            font-size: 18px;
+        }
+        
+    }
+}
+
+@media (max-width: 600px) {
+    .textContainer {
+        &__header {
+            font-size: 24px;
+        }
+
+        &__description {
+            font-size: $font-size-mobile
+        }
+    }
+}

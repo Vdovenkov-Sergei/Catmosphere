@@ -1,0 +1,35 @@
+@use '../../styles/variables' as *;
+
+.footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    gap: 5px;
+    text-align: center;
+    border-top: 1px black solid;
+
+    p {
+        font-size: $font-size;
+        font-weight: $font-weight;
+        color: $text-color;
+        margin: 0;
+    }
+
+    .bold {
+        font-weight: $header-font-weight;
+    }
+}
+
+@media (max-width: 800px) {
+    .footer p {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 600px) {
+    .footer p {
+        font-size: $font-size-mobile;
+    }
+}

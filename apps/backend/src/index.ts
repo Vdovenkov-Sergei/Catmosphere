@@ -9,9 +9,15 @@ import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './swagger';
 import chalk from 'chalk';
 import path from 'path';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
+
+app.use(cors({
+  origin: config.app.FRONTEND_URL,
+  credentials: true,
+}));
 
 app.use('/static', express.static(path.join(__dirname, '../public')));
 app.use('/admin/custom.css', express.static(path.join(__dirname, 'admin/admin-custom.css')));
