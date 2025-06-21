@@ -1,0 +1,59 @@
+@use '../../styles/variables' as *;
+
+.button {
+    border-radius: $button-border-radius;
+    padding: $button-padding;
+    font-size: $font-size;
+    font-weight: $font-weight;
+    border: none;
+    cursor: pointer;
+    font-family: $font-family;
+}
+
+.primary {
+    background-color: $primary-button-bg-color;
+    color: $primary-button-text-color;
+
+    &:hover {
+        background-color: $primary-button-bg-color-hover;
+    }
+}
+
+.regular {
+    background-color: $button-bg-color;
+    color: $button-text-color;
+
+    &:hover {
+        background-color: $button-bg-color-hover;
+    }
+}
+
+.transparent {
+    background-color: $transparent-button-bg-color;
+    color: $transparent-button-text-color;
+
+    &:hover {
+        background-color: $transparent-button-bg-color-hover;
+    }
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+@media (max-width: 800px) {
+    .button {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 600px) {
+    .button {
+        font-size: $font-size-mobile;
+        padding: 5px 10px;
+    }
+
+    .invisible {
+        display: none;
+    }
+}

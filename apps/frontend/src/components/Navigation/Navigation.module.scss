@@ -1,0 +1,23 @@
+@use '../../styles/variables' as *;
+
+.navigation {
+    border-top: 1px black solid;
+    border-bottom: 1px black solid;
+    padding: 14px;
+    &__buttons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+
+        Button {
+            width: 108px;
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .navigation Button {
+        width: 90px;
+    }
+}

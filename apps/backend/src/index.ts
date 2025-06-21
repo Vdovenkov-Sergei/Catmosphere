@@ -8,9 +8,15 @@ import { router as bookingRouter } from './modules/booking/router';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './swagger';
 import chalk from 'chalk';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
+
+app.use(cors({
+  origin: config.app.FRONTEND_URL,
+  credentials: true,
+}));
 
 // app.use(admin.options.rootPath, adminRouter)
 

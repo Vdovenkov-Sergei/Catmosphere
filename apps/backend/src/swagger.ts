@@ -273,7 +273,7 @@ const getAvailability: ZodOpenApiOperationObject = {
       name: 'date',
       in: 'query',
       required: true,
-      description: 'Date to check availability (YYYY-MM-DD)',
+      description: 'Datetime to check availability (YYYY-mm-ddTHH:MM:SS{timezone})',
       schema: {
         type: 'string',
         format: 'date',
