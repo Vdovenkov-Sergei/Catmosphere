@@ -4,7 +4,7 @@ import { extendZodWithOpenApi } from 'zod-openapi';
 extendZodWithOpenApi(z);
 
 export const CatSchema = z.object({
-  id: z.number().int().nonnegative().openapi({ description: 'Unique ID of the cat' }),
+  id: z.number().int().positive().openapi({ description: 'Unique ID of the cat' }),
   name: z.string().min(1).max(100).openapi({ description: 'Name of the cat' }),
   sex: z.enum(['MALE', 'FEMALE']).openapi({ description: 'Sex of the cat' }),
   photo_url: z.string().url().openapi({ description: 'URL of the cat photo' }),

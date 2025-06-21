@@ -4,7 +4,7 @@ import { extendZodWithOpenApi } from 'zod-openapi';
 extendZodWithOpenApi(z);
 
 export const BookingSchema = z.object({
-  id: z.number().int().nonnegative().openapi({ description: 'Unique booking ID' }),
+  id: z.number().int().positive().openapi({ description: 'Unique booking ID' }),
   phone_number: z.string().regex(/^\+?[0-9]{10,15}$/).openapi({ description: 'Client phone number in international format' }),
   name: z.string().min(1).openapi({ description: 'Name of the client' }),
   date_from: z.date().openapi({ description: 'Booking start datetime in ISO format' }),

@@ -4,7 +4,7 @@ import { Database, Resource, getModelByName } from '@adminjs/prisma';
 import bcrypt from 'bcryptjs';
 import prisma from '../database';
 import config from '../config';
-import { validateBooking, validateTable, validateCat } from './validation';
+import { validateTable, validateCat } from './validation';
 import { light } from '@adminjs/themes';
 import chalk from 'chalk';
 
@@ -15,7 +15,6 @@ const Components = {
   CatPhotoThumbnail: componentLoader.add('CatPhotoThumbnail', './components/CatPhotoThumbnail.tsx'),
 };
 
-
 function withValidation(resourceName: string) {
   return async (request: any) => {
     if (request.method === 'post' && request.payload) {
@@ -23,8 +22,6 @@ function withValidation(resourceName: string) {
 
       if (resourceName === 'Table') {
         request.payload = validateTable(request.payload, isCreate);
-      } else if (resourceName === 'Booking') {
-        request.payload = validateBooking(request.payload, isCreate);
       } else if (resourceName === 'Cat') {
         request.payload = validateCat(request.payload, isCreate);
       }
@@ -38,7 +35,6 @@ const admin = new AdminJS({
   assets: {
     styles: ['/admin/custom.css'],
   },
-
   resources: [
     {
       resource: { model: getModelByName('Cat'), client: prisma },
@@ -47,7 +43,6 @@ const admin = new AdminJS({
           new: { before: withValidation('Cat') },
           edit: { before: withValidation('Cat') },
         },
-
         properties: {
           id: {
             isVisible: { list: true, edit: false, filter: true, show: true },
@@ -83,7 +78,6 @@ const admin = new AdminJS({
             isSortable: false,
           }
         }
-
       },
     },
     {
@@ -93,7 +87,6 @@ const admin = new AdminJS({
           new: { before: withValidation('Table') },
           edit: { before: withValidation('Table') },
         },
-
         properties: {
           id: {
             isVisible: { list: true, edit: false, filter: true, show: true },
@@ -104,9 +97,7 @@ const admin = new AdminJS({
             isSortable: true,
           },
         }
-
       },
-
     },
     {
       resource: { model: getModelByName('Booking'), client: prisma },
@@ -137,12 +128,13 @@ const admin = new AdminJS({
           table: {
             isVisible: { list: true, edit: true, filter: true, show: true, new: true },
           },
+          table_id: {
+            isVisible: false,
+          },
         }
-
-    },
+      },
     },
   ],
-
   defaultTheme: light.id,
   rootPath: '/admin',
   branding: {

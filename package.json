@@ -10,11 +10,9 @@
   "scripts": {
     "dev": "echo 'Use npm run dev --workspace=<package> for run certain package'",
     "dev:frontend": "npm run dev --workspace=@catmosphere/frontend",
-    "dev:admin": "npm run dev --workspace=@catmosphere/admin-panel",
     "dev:backend": "npm run dev --workspace=@catmosphere/backend",
     "dev:bot": "npm run dev --workspace=@catmosphere/telegram-bot",
     "build:frontend": "npm run build --workspace=@catmosphere/frontend",
-    "build:admin": "npm run build --workspace=@catmosphere/admin-panel",
     "build:backend": "npm run build --workspace=@catmosphere/backend",
     "build:bot": "npm run build --workspace=@catmosphere/telegram-bot",
     "format": "prettier --write \"apps/**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
@@ -32,11 +30,5 @@
     "ts-node-dev": "^2.0.0"
   },
   "dependencies": {
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
-    "@mui/material": "^7.1.2",
-    "hasown": "^2.0.2",
-    "rc-slider": "^11.1.8"
-    "@types/node": "^24.0.3"
   }
 }
