@@ -92,7 +92,7 @@ export function validateBooking(input: any, isCreate = false) {
   }
 
   // table_id
-  if (input.table_id === undefined || input.table_id === null) {
+  /*if (input.table_id === undefined || input.table_id === null) {
     errors.push('table_id is required');
   } else {
     const tid = Number(input.table_id);
@@ -101,7 +101,7 @@ export function validateBooking(input: any, isCreate = false) {
     } else {
       data.table_id = tid;
     }
-  }
+  }*/
 
   // id только при редактировании
   if (!isCreate) {

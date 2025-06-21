@@ -8,11 +8,15 @@ import { router as bookingRouter } from './modules/booking/router';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './swagger';
 import chalk from 'chalk';
+import path from 'path';
 
 const app = express();
 app.use(express.json());
 
-app.use(admin.options.rootPath, adminRouter)
+app.use('/static', express.static(path.join(__dirname, '../public')));
+app.use('/admin/custom.css', express.static(path.join(__dirname, 'admin/admin-custom.css')));
+
+app.use(admin.options.rootPath, adminRouter);
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
