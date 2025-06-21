@@ -25,10 +25,6 @@ const Navigation: React.FC = () => {
                 <Button visible='visible' variant='transparent' onClick={handleCatsClick}>
                     Кошки
                 </Button>
-
-                <Button visible='visible' variant='transparent' onClick={() => { }}>
-                    Цены
-                </Button>
             </div>
         </div>
     );

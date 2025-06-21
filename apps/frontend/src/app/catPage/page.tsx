@@ -1,6 +1,6 @@
 'use client';
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from './CatsPage.module.scss';
 import Header from "../../components/Header/Header";
 import Navigation from "../../components/Navigation/Navigation";
@@ -8,10 +8,62 @@ import CatInfoDescription from "../../components/CatInfoDescription/CatInfoDescr
 import CatInfoCard from "../../components/CatInfoCard/CatInfoCard";
 import Footer from "@/components/Footer/Footer";
 
+interface Cat {
+    name: string;
+    description: string;
+    link: string;
+    alt: string;
+}
+
 const CatsPage: React.FC = () => {
+    const [cats, setCats] = useState<Cat[]>([]);
+    const [offset, setOffset] = useState(0);
+    const limit = 4;
+    const loaderRef = useRef<HTMLDivElement | null>(null);
+    const [hasMore, setHasMore] = useState(true);
+
+    useEffect(() => {
+        const fetchCats = async () => {
+            try {
+                const response = await fetch(`http://localhost:52/cats?limit=${limit}&offset=${offset}`);
+                const data = await response.json();
+
+                if (data.length < limit) {
+                    setHasMore(false);
+                }
+
+                setCats(prev => [...prev, ...data]);
+            } catch (error) {
+                console.error("Ошибка загрузки котов:", error);
+            }
+        };
+
+        fetchCats();
+    }, [offset]);
+
+    useEffect(() => {
+        if (!hasMore) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    setOffset(prev => prev + limit);
+                }
+            },
+            { rootMargin: '100px' }
+        );
+
+        const loader = loaderRef.current;
+        if (loader) observer.observe(loader);
+
+        return () => {
+            if (loader) observer.unobserve(loader);
+        };
+    }, [hasMore]);
+
     return (
         <div className={styles.catsPage}>
-            <Header button="visible"/>
+            <Header button="visible" />
             <Navigation />
 
             <main className={styles.main}>
@@ -19,19 +71,22 @@ const CatsPage: React.FC = () => {
                     <CatInfoDescription />
 
                     <div className={styles.cats}>
-                        <CatInfoCard name="Фиат" description="Всегда смотрит удивленным взглядом. Очень добродушный и обаятельный кот. Любит почесушки щек и спины." link="/CatFiat.png" alt="Фиат" />
-
-                        <CatInfoCard name="Беллиссима" description='Очень любвеобильная и общительная особа. Имеет интересную особенность - забавно урчит с открытым ртом и при этом распушает хвост "елочкой".' link="/CatBelissima.png" alt="Беллиссима" />
-
-                        <CatInfoCard name="Лисма" description="Лисма - молодая и озорная кошка, которую нашли в Подольске. Она настоящая охотница, ее интересуют абсолютно все игрушки: шуршащие бумажки, мышки, мячики и удочки." link="/CatLisma.png" alt="Лисма" />
-
-                        <CatInfoCard name="Натс" description='Двойное имя получил за карьеру в кино. Обладает выразительной мимикой, в совершенстве исполняет "голодный обморок". Всегда будет рад почесушкам и вниманию.' link="/CatNuts.png" alt="Натс" />
+                        {cats.map((cat, index) => (
+                            <CatInfoCard
+                                key={index}
+                                name={cat.name}
+                                description={cat.description}
+                                link={cat.photo_url}
+                                alt={cat.alt}
+                            />
+                        ))}
                     </div>
+
+                    {hasMore && <div ref={loaderRef} style={{ height: '1px' }} />}
                 </div>
             </main>
 
             <Footer />
-
         </div>
     );
 };
