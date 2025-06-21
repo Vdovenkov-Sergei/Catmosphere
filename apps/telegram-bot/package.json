@@ -1,0 +1,22 @@
+{
+  "name": "@catmosphere/telegram-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn src/bot.ts",
+    "build": "tsc",
+    "lint": "eslint . --ext .ts"
+  },
+  "description": "Telegram-bot for `Catmosphere` cat cafe system",
+  "author": "Petrov Nikita",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^6.10.1",
+    "@types/node": "^24.0.3",
+    "axios": "^1.10.0",
+    "dotenv": "^16.5.0",
+    "telegraf": "^4.16.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
