@@ -21,7 +21,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
 
     async function fetchAvailability(tableId: number, selectedDate: string) {
         try {
-            const res = await fetch(`http://localhost:52/bookings/availability?table_id=${tableId}&date=${encodeURIComponent(selectedDate)}`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/bookings/availability?table_id=${tableId}&date=${encodeURIComponent(selectedDate)}`);
     
             if (!res.ok) {
                 throw new Error(`Ошибка HTTP: ${res.status}`);
@@ -38,7 +38,7 @@ const BookingModal: React.FC<BookingModalProps> = ({
 
     async function createBooking(table_id: number, name: string, date_from: string, date_to: string, phone_number: string) {
         try {
-            const res = await fetch('http://localhost:52/bookings', {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/bookings`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

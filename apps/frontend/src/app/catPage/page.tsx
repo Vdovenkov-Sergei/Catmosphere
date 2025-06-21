@@ -10,6 +10,7 @@ import Footer from "@/components/Footer/Footer";
 
 interface Cat {
     name: string;
+    photo_url: string;
     description: string;
     link: string;
     alt: string;
@@ -25,7 +26,7 @@ const CatsPage: React.FC = () => {
     useEffect(() => {
         const fetchCats = async () => {
             try {
-                const response = await fetch(`http://localhost:52/cats?limit=${limit}&offset=${offset}`);
+                const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/cats?limit=${limit}&offset=${offset}`);
                 const data = await response.json();
 
                 if (data.length < limit) {
@@ -37,7 +38,6 @@ const CatsPage: React.FC = () => {
                 console.error("Ошибка загрузки котов:", error);
             }
         };
-
         fetchCats();
     }, [offset]);
 

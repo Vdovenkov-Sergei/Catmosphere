@@ -14,7 +14,6 @@ const Navigation: React.FC = () => {
         router.push('catPage');
     }
 
-
     return (
         <div className={styles.navigation}>
             <div className={styles.navigation__buttons}>
